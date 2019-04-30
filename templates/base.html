@@ -1,0 +1,367 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Municipalidad de Tabossi</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href='{% static "external/bootstrap4.1.3/css/bootstrap.min.css"%}'>
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href='{% static "css/base.css"%}'>
+    <link rel="stylesheet" href='{% static "css/marca.css"%}'>
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <link rel="stylesheet" href="{% static 'vendors/iconfonts/mdi/css/materialdesignicons.min.css'%}">
+	{% block css %}{% endblock %}
+    <!-- Font Awesome JS -->
+    <link rel="stylesheet" href="{% static 'external/fontawesome-free-5.3.1-web/css/all.css' %}">
+    <script defer src="{% static 'external/fontawesome-free-5.3.1-web/js/solid.js'%}"></script>
+    <script defer src="{% static 'external/fontawesome-free-5.3.1-web/js/fontawesome.js' %}"></script>
+
+</head>
+
+<body>
+    <div id="fb-root"></div>
+    <script async defer 
+        crossorigin="anonymous" 
+        src="https://connect.facebook.net/es_ES/sdk.js#xfbml=1&version=v3.2">
+    </script>
+    <div class="wrapper container-scroller">
+        <!-- Sidebar  -->
+        <div id="sidebar-container" class="sidebar-container">
+			<nav id="sidebar">
+				<div id="dismiss"></div>
+				<div class="sidebar-header">
+					<a href="/"><h3>Municipalidad de Tabossi</h3></a>					
+				</div>
+
+				<ul class="list-unstyled components">
+					{% for section in sections %}
+						{% if section.subsection.all %}
+							{% for subsection in section.subsection.all %}
+							<li class="">
+								<a href="#{{section}}Submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">{{section}}</a>
+								<ul class="collapse list-unstyled" id="{{section}}Submenu">
+									<li>
+										<a href="{{subsection.get_absolute_url}}">{{subsection}}</a>
+									</li>
+									
+								</ul>
+							</li>
+							{% endfor %}
+						{% else %}
+							{% if not section.parent and not section.default %}
+								<li>
+									<a href="{{section.get_absolute_url}}">{{section}}</a>
+								</li>
+							{% endif %}
+						{% endif %}
+					{% endfor %}
+                </ul>
+                <br>
+				<div class="marca">
+                    <p class="marca-title">magic</p>
+                    <p class="marca-subtitle">web design</p>
+                </div>
+
+				<!-- <ul class="list-unstyled CTAs">
+					<li>
+						<a href="https://bootstrapious.com/tutorial/files/sidebar.zip" class="download">Download source</a>
+					</li>
+					<li>
+						<a href="https://bootstrapious.com/p/bootstrap-sidebar" class="article">Back to article</a>
+					</li>
+				</ul> -->
+			</nav>
+        </div>
+        <!-- Page Content  -->
+        <div id="content" >
+            <div class="subcontent">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <div class="container-fluid">
+                        <button type="button" id="sidebarCollapse" class="btn btn-info">
+                            <i class="fas fa-align-left"></i>
+                            <span>Menu</span>
+                        </button>
+                        <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <i class="fas fa-align-justify"></i>
+                        </button>
+    
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="nav navbar-nav ml-auto">
+                                <li class="nav-item active">
+                                    <a class="nav-link" href="{% url 'avatar_list' %}">Gobierno</a>
+                                </li>
+                                <li class="nav-item active">
+                                    <a class="nav-link" href="{% url 'ordenanzas_list' %}">Ordenanzas</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+                {% block content %}
+                <div class="col-md-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-md-8 col-sm-12">
+                                <div class="card-body">
+                                    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                                        <ol class="carousel-indicators">
+                                            {% for imagen in images.all %}
+                                            <li data-target="#carouselExampleIndicators" data-slide-to="{{forloop}}" class="{% if forloop.first %} active {% endif %} "></li>
+                                            {% endfor %}
+                                        </ol>
+                                        <div class="carousel-inner">
+                                            {% for imagen in images.all %}
+                                                <div class="carousel-item {% if forloop.first %} active {% endif %} ">
+                                                    <img src="{{imagen.image.url}}" class="d-block w-100" alt="...">
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Anterior</span>
+                                        </a>
+                                        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Sigiente</span>
+                                        </a>
+                                    </div><br/><hr>
+                                    <h4 class="card-title">{{ posts.first.title }}</h4>
+                                    {% if posts.first.published_date %}
+                                        <p class="card-description ">
+                                            {{ posts.first.published_date }}
+                                        </p>
+                                    {% endif %}
+                                    <div class="">
+                                        <p>{{ posts.first.text|linebreaksbr }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div id="clima"></div>
+                                <div class="fb-page"
+                                    data-href="https://www.facebook.com/munitabossi"
+                                    data-tabs="timeline"
+                                    data-small-header="true"
+                                    data-adapt-container-width="true"
+                                    data-hide-cover="false"
+                                    data-show-facepile="true"
+                                >
+                                    <blockquote
+                                        cite="https://www.facebook.com/munitabossi"
+                                        class="fb-xfbml-parse-ignore"
+                                    >
+                                        <a href="https://www.facebook.com/munitabossi">
+                                            Municipalidad de Tabossi
+                                        </a>
+                                    </blockquote>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+				<div class="col-md-12 grid-margin stretch-card">
+					<div class="card">
+						<div class="card-body">
+                            <div class="row col-md-12">
+                                <div class="col-md-9">
+                                    <h4>Hi!</h4>
+                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis ab expedita placeat porro blanditiis tempora. Delectus cumque repellat sapiente non quidem ducimus aspernatur obcaecati. Quasi eligendi dignissimos aut repudiandae unde?</p>
+                                </div>
+                                <div class="col-md-3">
+                                    <img class="img-fluid " src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxISEhUSExIVFRUXFxgXFxUXFxgXFRgWFRcWGBcVFRUYHSggGB0lHRcVITEiJSkrLi4uFyAzODMtNygtLisBCgoKDg0OFxAQFS0dHyUrListLS0tListLS0tLS0tLSstKy0tMy0tLS0tLS0tLS0tLS0rLS0rLS0tLS0uLS0tLf/AABEIAMMBAwMBIgACEQEDEQH/xAAcAAABBQEBAQAAAAAAAAAAAAADAAIEBQYHAQj/xABDEAACAQIDBQYCBwcDAwQDAAABAgADEQQSIQUxQVFhBiJxgZGhE7EyQlJygsHwBxQjYpLR8aKy4TNDwiRTk9IVFmP/xAAYAQADAQEAAAAAAAAAAAAAAAAAAQIDBP/EACERAQEAAwEAAQUBAQAAAAAAAAABAhExIUEDEhMyUWEi/9oADAMBAAIRAxEAPwC2CwyieIsMqxB4FhFWOVYVUgYYEcqQ604VUgAVpwqJDKkIqREEEhFSECR+SBh5J7lhAI4rAAZYOo4A1IEZj8YEGlr6+Gm8k8AP1ymD2vt1nfLTux+1a+7fYHRRA9Nv+9JwYdbSFtHbdOkLm5+7qfDl7znOLGK+kGe+/Qg2/XhKrFbTxTEXc3103Xtvsdxvz6QGnRh24w4NmFQdStvnLfZ+28PX+hUBPLc39J1nOjWptS/iEEj6R4AnTdx5buEinBKRmpVLMNQpuGB6HePCI/tdfinOOz/bKpTPw693UaE/9xf/ALi2vPxnQsJiUqIHRgytqCIFZoW0WWPUR2WMgMkaUkm08AgEM04N6cmssEyQCCyQLJJ7pAOsDQHWCcSZUWR2WBIzCBYSSywTCBoxWKGyiewC2RYVUnlNZIRYyeIkKqxIsKqwJ6iwqpEohVEDeBY9VnqiPURAgIp6BHBYGblgsTVCg35Q5lHtrEWBI33yr+Z8r/OISbZvbeJeq5pg2F7uRuFuA5gbgOeu+1s9j8XTo925zfYU97oWIufIWhtv7T+ADTpm72JZuX6v+t4s/wBnnZX4g/eq92JJKg7r8T48/SRctetZj8KPZ/ZzF4kZ0BVeZLD/AHHWS6/YHEb8wJGu/Xf+uU68uHsLAaSLiKdhM7nk0mGLjuM2A6qVbRgwaw4gLa48+Eo8JsjEpUVspIzAEcCOPrrO1YrChiLgEym2vR7pIFj03Rz6lH4o5r2jwpo1PAgE9DuPyF+cuux/aA0W1/6bGzryPBwOfMcYftjhhVLleKEj7yqHHtf1Mx+y6uoPO4tz5D5CaTjKz13ukwIBBuDqCNxB3GGAmS7C7Uzp8Im+UZkPNDvHlcetuE1qmVKzs09EWWOitGAiIxlhyIxhAI5WR6iSYwgHWBILrAOkmssBUWBoNRYBhJlUSMwgASsUfaKAXKrD0xGU4YCNJyiGQQaiGWAPUQoEYohVgb0CPAiAjgIgbae2jgIrQCPiXsNN5mT2xXuWI3J3R987/O595pcfVyqzcFBHn+j7zIbRcrTtvJuelyNfO5sJGVaYRkFwZqPbez1FA5HJc+hY+07VsrBClTSmNyKB6TmfYWj8XFqd6oCb+wPmczek60szvW3IMLWkPFAaw5eR8UsdTjPVdVTXylNtM6FQJdk7j43lTjqV1JG/WZ1tGZw9AVMwI3Aj8OVgf9y+k5pSQq7KPvDxH+G9Z0zBg56gF+9Sb+oA29rzAbVp5K1x9VyD4HvAelvWa4MfqT1ddlto5KqtyN/FW0YDwJPrOt0yDrOG4apkqDobHS11On/iPWde7N4r4lBea90+W4/l5S51nlPFwpj41RHykGERpjzPCIAJoFxDsINhAIzLI1VZNKyPVECQKiyOyyXUEjssDAKxQmWKAXCGFAgUMMI0irDIIJBDLEYiiEWMUwiwB4EeIxY8QD2eM1hHWgax/X68oBUbZfuqnUE+t/nb0mJ7X44U6DNfebW3cNBp1PqPGaLaeIz1G5LlQdXqG1vQzBdvLuaVMH6T2t7n/fMu5Np5i3H7KNn5cKKzDv1DmJ8dwHIAWAHC02r4iqTlp0/Go/dQeA3t5adZXdlcKKeFoqNwRflHdpMDiK1MU6Nb4Nz3ntc5bG4UczpJl3WlnwrdrY/GJfLUwl+RDg/PTfxh9gbVrVgBVQK2oJU3Q+BmY2p+zlCovXru9ySxIuSbb+mnTfL/ALGbGegO8zNw72+3AX+tw4CO6GKZ2mxXwlU203HzvM1/+yoihQrVGNwFXU7ugNpc/tFY/uzEbwJyTsuapqMq1/g5vrEEt5f5ik3VW6kbL/8AK1VdM2DqICwBe40U6EkHhYkzL9qcHlqnT6aBvFqRZGI/Ckd2ho4yi7MMS1amdQL7gBYb9Du4Wlz2qo/Ew9HEgaIe99yoAD73PkZXOM771jqq7jbevy/5Ues6L+zvHZkyk6/RPiu75MfxTBOmULfXK2vUGwNvItL7sNiclZkv1XwFtZW0WOrqI+NU3AMdLZvI0x8aYANoNhCtBsIECwkarJbSPUgEGqIEiSnEjuYGBeexsUAtkh1glhkEaRkhhAoIdREZ6x6mNUR4gZ4jgI0R4gT0SLj3spPQ/r2kq8rts/QI56etx+cV4c6zFXQ014sTUJ67h/qYekxXaUfx6DHg1W3LuoMvus2OLqj4yg8W9BTBqE+Gtpi+09zSRxoUrMvgbs2vt6TPHrezx2Hsw+bDUCD/ANtPYAflLtqVxMh+zjFh8DR/lBQjkUJH9psEqWkz+HlvsV1ahrvjsJiFJZV1ymxPW17elvUSs7WbW+BTJUXqMcqLxLNoLR+ztmYhMKtOnVVKp7z1GT4l3bUkrmHz3RSe+Ls89R+2eHzUGuN4t6ziOGb4eIyMP+QOE7P25xj0cLqc1TQd3QM3G172HHpOO4jELWNIuMtT4gLkXICDkTvJ9JWM1aLyN7TwtNqdyAepEPsxFrUHokDKyuoGmjLcgDldWceUmbQwYp0tNxGhHhvlJ2ar2SpbfTqCp6Gx9VJElWU8ZbGUSqWbeO4dOKHgPw+4jdj4j4ddHvuNj4GwPoSZpO0WDUFmA7rar00ut/IZfwEzHYjugH7JHvYXPgbmVj7GOXjuezal0txU2/Me0lTP9k8ZnpITvK2PipsfmvrL8zWML15eeGKemMjCIwiEMY0AC8j1JIeAqwCHUEjPJNWR3EDRrRR5WKAW6wyCCSGSNIyCGWCSGWBiCPAjBHiAOEdGz0RB6JW7da1M36f8yyldts2plt9gTbqLf4k5cVj1j2N61apwpU/hg/zP9Mjx1H4RzmW2gM2Hrc1qK3qKIPsxmnxamlQ+GTZ3u7/ePDysR+CZzZ7fFpVlto7VfP8Ah1GFv/jQ+czxb1e/ss2nkqVMIdLj4qdTpnHTRqZt1M6eDOD7NrsjLiEF6uHcPYfWVcy1B1JQVF8hzE7hg661EV0N1dQynmGFwfSLOapy7jO4NFxGNqVX1p4fuIOdVhdm8lIA+8Zqf3tN2byFyfacq7TYuth8FUekcpfE2Zt5BDHgdNbAayx2F2yx6orVaVKqrFdw+G1gxY2IuL6kbtwHW9YTxX1JVr2k2gv/ALZbf9Ihd3CxE5X2gpWfNkZL7r7rjkROvN2gXEZwcI4b+coUuOBsb8NbTK4imMTi6dAUVpLUd/iG+Y/9NyAmgCiyjcOBh9ujl+6c0JsLaJr7OGb6SXT+nd7ESv7DNmNcE2DaE8s2n5iaqts2ng8ARyUknm2UL8xMl2LNkrtbdlb0sT/aR/RleJbOKgNB9DlYjoVPeX9cjzmPx9AgWPFTTP3ge7fr9LXjoZrtp08uLpFTvcgeqofYMfxTP7VIJdRrYkg9MufXwvYciD5VizyaL9nePumQngGHjuN/VfSdEDaTivZzFGlXtv3uBzA+mvmM4t1nX8BiA6Ag3BAIPMHcZpGOX9SojPLzyUl6YNo+NMCCeR6gkh5HqQCLVkZ5Kq75FZRA0dlns9YxQC3WGSBUwyGNI6QywCGGWBiCPEYI4GAPjgYwGe3gDpW7Wq6qvHf4WvlPqPbpLITL7QxTGo+Qd46L00tf39/ORnfF4dZbtHib1Cb2VLqPvMpXTwF/USq7F1s1uAL6DhZlq0wP6QvoYLtNWAYIpuLhBzJJBdyeoU+gj+x9LKxHJqO7dpkJI/rPpIx/Vrl0KjTFJ8/1c5R+i1LanwILdcs6Z+z3EE4X4TfSou1P8AOan/oZR4gzB4QBqlWk26oocfeC6/7T+ryZ2S2z+64kLUNlYClUJ3Ar9Cp0AJIP3mPAQvsONhidhDE4XF4Y6XqvlPJjlqI3kWB8pC2HhA+DVWGSot0ZeK1KZ1UnxFvObDDplqMeDBT5i6k+mX0lH2n2Q7E1MO606pIzqdEqZQAGNtzWAGbkADewsYcaS7ujsFhwvfO4jzuDbWZJ8QEqNidxplwvWpUDUwvWwZifLnL/AGfj6gpP+8KKbDQahhbeWFj/AGnNdtbRbEVxSo6Uw9qY+0xNi556k6/kBHfWkn2y2tN2621/6HDU+NS9Q/cViR6kiQOwjFqTa/Tpt662HkUI8x0mT7abQ+JV+GmoVVo0x/Kgtm8zf16TV9hGs1NRqLN46EAnrvv5mL7dYubLL/rSdWfO6VLaLUzH8SFyfVR/VMnVqWqKDYm2vgGbKw8j+rzS0yfh1wNCoqrfwUi/+mZDEViKvVRpw1UANr6wxGZYhzQqqw+q+h4WJJsem646zpnZTaCi1MHusM1LwNyU8QQfMNOa4gCooZd+XTysQfTTymg7PMxw5N/+mwOY6/DJIszW1y3Njvtv3SkV1WKV2xNoisljo6/SX8xqbiWJlM68jGjrxhMZGNAVIVzBNAI9SRKklVZCqmBgEz2NzRQC6WFQwCQyRpSEMMpkZDCqYGODHAwSx4MAIDPbxgjhAG4h7L4zNbRZUFU30FwzeZ0Hjcbv8Xm0K2UE/ZBbzG4esxm0Kwq2pfVRTVrEfWc65b9SbfivpaZZ/wAa/T/rB7UxWetqLcbcQoINj5X06CXfZ9jTap4K3j8JsOp+Te8z2M0d2JH0iF4d1ib9OLach4TWYKndio+kytbjq9AN7kL6R/CvlBxWL+FiuRXvA9FrOg8so1+9fhJG3MNmPxVHeRrOn2qZuQf6WLA8O+JTdpD3yw0H8ROemZXv6ZvWWuFxjPSo1uK2o1l3kqdUPiGvbrCzwS+t32F27nAwtVrso/hsd7J9k8yPkOmutxNDMvDznGMSpR8uoKkFSNCOViPn4HjNvsTtTVakBUsxGmbcT48D7TLem323sQ+09HKpBVfU2mLxKrRzsozOFN23BWZTcDlYaeZ6To+IwYxOjEgdN/rM32t2alKkVUBVANhxuQfU9YTI765MhYsX3uWCr+flaw/FOhdhrfEUg6FXYeBfT2v6TC4dR8TXcPmwJ/ITadi3yNSzW1Fr+dRxl56E+om2XHLOtCuHH7xUT6tZSR96zZvm/qJz/a9IrUL7iua9+DW0Pra/nOi7SUgI4HepP/p0Fzz1I9TymY7ZYZVqfE1yVVuSORIYHxsR4zLG+tsp4o8CRluN6623b+6Brp9W80fZTagw9Y3GZCuUqLG4tusfLTpM7gaWTunUb1I3EaBfK9/A6SXR0ZDbiAfAt/nzl1nON7TyUqiYjD2NJyoZb95C11tbhqBpy56W1zzkuFqt8UZLMEYOQTa7KRZevE+nOdOwGPWsoYaE71O8HlHjUZRIMaTPTGXloMeDePaBYwCPWaQahkrEb5EeBhnwijTFALhDDKZGQw6mNIymFQwCmFSAHBjwYIGPBgYgjxAK9zYEX/PlBY/EmmubLcDUk3AHPeBEJELbVQF1S+gDVG6hASg63Ye0wuNIp0LsbCqS4F+84W+UE/VQaa8bCWG09tLXc/D0XcTuzW3rfkcxGu/XlrU9oqLV6dRgTmFivK2VsqW4AZVHkJnbut8ZqM1jQXpJU4PV04aaKTbxM2T9x8M386X6BqKKP9/tMvjLJRoJ9lQfxVKgPsLe8u8bidcO3Krhxz0K4YeneMR1V9pqGjW3rke3Ura3UaN+t67HtpXT6tlqKOViO6eoBk3bZHxKq7u6PLL8f9echdicOxLG2+k4PjdR+Y9DKv6lP2X9ShmdCR9JWB8VII9iPSSdmLkJHOEqtls2W4Rfcix+UjbOrCo1wTvmNdMbzY6iw0mf7eUiy6C/SX+yhoAITadFeOt4kzr552hQZDlIsdTy0sR/z4CaLCVxTqUQToGJ8FIFvQLf8Rl5202LmxaG1tEI6gZr/L5zN7cwjJka2oWx59x7MAPu5h/mby7jns1a6Vjh9bfe9xzDA3F/AEe8zm1EzU2pm2Ze8hO4g7x4HXyY8podm1RVoowNyVRgPw318Rp5zNbepMhBvpfTfqDvQ6W15/3mXy1+GUFTKxA0F7WPAm4uOY3H9XlxSAemX+yLkg8V1sQdR9b0lTjQKnIVBvBGjW3HpwPmecNsc1A+gPe7pGYWtbiCRv1v1IPhd9jPi3oNSde4O7rpx8+v61lhsbFlDbXp/kTKbYRqNQIDqRvvcEm9hoN+7dzEPsjaTNoGBPI7/ff7Q0TsGz8VnUG9zaGYzIbP2oUplipDJr4gHUeYuPOawVAwBBuCLjwO6XKzymjWMAxhWMjVDKIDEGRXaGqmRqhgA80UaWigFojSShkRWh0aMklTCK0jqY9TAknPH0kZyFHH9XJ/XnIqtrfl+iZe7No5Uzby2vlvA/OBg4l6dBLkaAacyeg6zlnaba1TEudSKWa1r6NbVgAOA/Pymw7X4olDlOrkonQfXf5AeJlfsDYalWdx3UXQc7gm58NW6lhJtaSajN4LBZKdiCWZrkctQd39XQbuZlhgKgy1KZ1YBWOnBrXHowPmYdmKK+It/DGo5lASCByznS/EKZWbQqrTolxpVqKC2ug018r2tM8muLK7bxVizA91SMo6povv8hLeocq0gdbVKa26qtJD/tEzWKBzKD0bL0Xva/rUy1bElqlFL3ylSx5sSLnyAJ9I9eJt3WgxGG+JXdcpJzAacg7am44/KX+E7OVqKlbqwKn6Jym17ka6/WG48pXbFJzmpvLWYDx/xNe2Is4HACxP85s1vADKfG0cm4Llq+KyhsqpaxpORyCkjlwkjZ/ZtlJtSbnqLfOa/BKAo1h2eP8AFE/mqlw+BqLwA8Tf2F5ITDXIJ7x6jT0/vJxbpAO8qfTxib9TKst2mwmbE0SDqQ4J8ASPzma7UbPDOyD7TEdMxzDy73pNjt+yGhUI3VbHwdWEo8bTu4J1VhoeY3etrScorGqDspVP7sE+tSax55TcXt0ubeAkzH1lZWSoL9b8eHqN3pKtmOFxZJ1Wro3LNY+Qv+Um7Qoo6g3te9mv3dNbeh4+vPOxpKyuPwi3urAiwI1sdwvY8eOl+e7hGpPWpk903+0hANuoO/x6b4Ha+HdTe/PvDpz5gwGB2vWQgFc68QBrbcd3C3S0uItWJZmOSqMw0sxYAkjcc24ndqTr7T3DbKSpmdKhVhra1iCNLsOEpKyBan8M2VtQDz4qf79Zd7NxBqFVKkOPrL9LLx1vZhbh4b4WFKtcLhqjMi1XOXSxFgpvwJ4eE6Zh7ZBbdYW8pnMKwqoQwvc5bHw9jLvC0zTGUnQgEX3jgR1Gg9YQshqhkSo0LUeRajS0Bu0juY+q0A7QBt4oMtFALSmYcNIqvHq0oktTCq0iI8IlSIJuGF3RSLgsLjmL6iaTGPZDblYdNJndkDNWTzPoNPyl7jdQf1wI/OAY3bKZqyrwVbW6n9H1llSP8IJuDXzHkguzn0085U42oPjMeVh7gSXVrkAKDZyQq9DvufC2b8MzbIGPOYhSAtGib1P/AOlTKQKQ5imtl8SZjO0WNCBqtX6TaU6d7WW4GvQ/LpNPtvalKlSZv+3S0UcWcbz1JPvmMxuFwD4qsa1TWxGnAHTS3AAG3S9uItPfafPIqaOGYFqtQ94gn8RBOUdBf5CTtkYJmYaG7aDxI1J8Bcy3bZxepYCwA1HCmmuh11Y7+d5f7F2f8FPjMurDLSTiF525n2AldHkTtn0hTuxAvbIg8Py0uT08pf7JwhP0h1133OpJ6mQNm7PZ2DsPLhYWOUDgLgE87DkJqaCdJpIyyp1AZdIYtPDGEykPXeCMTNGXjCk7an/0wI4VFPs395XqtqFNumnmub/xEs+1SZqFv5lPoZT7Qq5cOAeDAeRuLTPKLxoG19kfvFLTfYEHjcH8vzmRr/EpJbUFHRjyOpVh4WA9BN/gPoL4n3v/AImZ7QBTUIYgB1PeO4a3V25WuPeRlGkvrHbVrAE5ADuJQ79de7beLG1+FteBgsLURGDquYA/aKkEciNPX14xYnANVupFnQAEfzKDmHQnf5cgZV4fFNSrFWGl9QdPOMtvdoVRUrBjb6IfQWv3tNOe+WuzMK1Co1UaqU0I/mO4jmAPeVO0RTBdlO8Xtyuy7um+00HZ1/3gKhNspu/VVF/kLQyKNhszSnTF+9bM34tR7Wmgeoe6eY0mZo61W4XGYcLX3gdN3rL1L2XXh/eKFRXaR3aJ2gGeWk2q0CxnrtBEwBGKDzzyAWAaEVpHDR4aUSQHhEqSIHj88CaDs4b1fBT81E0FQXvMz2Xf+MfuH5rNPeBuf7bpMuJyjc6kjqR3j6W9jAYisTXdh9RGy+LJSBPufWaHtbgWZVq0/wDqU2zAc7cPPd5zLYXEqXFRR3CCdfsEAVFPVStP8KtIsXL4we29oXyJvy3a3DOcoU+VvUiaDB1mVKeHpDvtpfrvZjfkCT4txtKPbeyTTr6fVPqtrqf6bTUdlReoXygsTa54LrcedzJ18L/1ebK2SFGXMDxYn6zdRvI4W9eU0+E2aCb7zzO//gdBpJ2z8EtgbL6SySgBumkkjO5bR6WHCjdCQjQDtKQ8ZoMvGM0YWgDyZ5eDLTwvGYO06Wemy8dCPIg+8zW3UDUtN9wSORtNVmlTtqkpp3sL3F+Gmo19RJsOKujVtSBBtbS/iP7zGdrMUrM4FwFRRu35idw5W+U1oFhlO/Mp8tB81M552sdnxFVdwuPDuoABbfe5NvDhvkWLlRti7Uysue5tZFqA62BNkqad4DSxOovbUaS17QU6NamGyXNvpqMrDob/AC085Q7LpIxykHIw1+0jDTNpw3S9NN0UgtZra8QbX7wA3i3LUeEm9OcZZsHm7gfX+Ydb20v0k7YbPh6gLgZdDmvdct9WJW/d36/nK+viaiudePA6acf8y92TVSuyZ1BYEi+69xYhrb7238dI6U02GDrK7Zgdy6EEEXY3Oo8F0l2Kmg8JiRsJ6Rz4WoyneaZPcbjYfZ89Jo9kY/41JalrE7/EAfnCFU92gHaeO8EzykvGaDczxmgneAItFAmpFALAGPUxRSiPB/XnHIdYooEuOzTfx18G+U1piiiMGoLqZgdsUVp4uoEGUZFq6f8AuXbvDkdIoosuHiq+0dIAoQLGxHlYsB4XMP2IF6rA7sw9lH9zFFInWl46pR0GkeTFFNWRryLViijhIoM8/XyiijM155eexQBkibVH8Kp90nzVSR7gGKKKiKzFUwc2n60nPtuAfvD6DRltp9pRf5z2KRVxT1tKtxoe4fMjWWuFqFg6E3UBSByJVjdTvHlFFJXGPxFQ/T+tff8A35y4wqhMSgUWBVWIG6+pv7CKKFTG6xJtQcjQ2bWO2QgWigAsLfOKKEKiuYKpFFKSFeBYxRQAMUUUA//Z" alt="">
+                                </div>
+                            </div>
+							
+                            <hr>
+                            <h4>Hi!</h4>
+							<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis ab expedita placeat porro blanditiis tempora. Delectus cumque repellat sapiente non quidem ducimus aspernatur obcaecati. Quasi eligendi dignissimos aut repudiandae unde?</p>
+                            <hr>
+                            <h4>Hi!</h4>
+							<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis ab expedita placeat porro blanditiis tempora. Delectus cumque repellat sapiente non quidem ducimus aspernatur obcaecati. Quasi eligendi dignissimos aut repudiandae unde?</p>
+
+						</div>
+					</div>
+				</div>
+                {% endblock %}
+            </div>
+            <br>
+			<footer class="footer">
+                <div class="container">
+                    <div class="row">
+                    <div class="col-md-4 col-xs-12">
+						<h4 class="title">Contacto</h4>
+						<ul class="social-icon"  style="list-style: none;">
+							<li>
+								<i class="fas fa-home" aria-hidden="true"></i>  20 de junio 169 Tabossi, Entre Rios, Argentina
+							</li>
+							<li>
+								<i class="fas fa-phone" aria-hidden="true"></i> (0343) - 4970005 - 4970027 
+							</li>
+							<li>
+								<i class="fas fa-clock" aria-hidden="true"></i> Lunes a Viernes de 7:00 a 12:00
+                            </li>
+                           
+						</ul>
+                    </div>
+                    <div class="col-md-4 col-xs-12" style="padding: 1rem; text-align: center;">
+                        <div class="category">
+                            <img src="{% static '/images/logo-2.png' %}" alt="">
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-xs-12">
+                        <h4 class="title">Visite</h4>
+                        <span class="acount-icon"> 
+                        <a href="#Galeria"><i class="far fa-images"></i> Galeria</a>
+                        
+                        <a href="https://www.facebook.com/munitabossi/" class="social" target="_blank">
+                            <i class="fab fa-facebook"></i> Facebook 
+                        </a>
+                        </span>
+                    </div>
+                    <hr>
+                </div>	
+			</footer>
+		</div>
+    </div>
+    <div class="overlay"></div>
+
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="{% static 'external/jquery/jquery-3.2.1.min.js' %}"></script>
+    <!-- Popper.JS -->
+    <script src="{% static 'external/popper/js/popper.min.js' %}"></script>
+    <!-- Bootstrap JS -->
+    <script src="{% static 'external/bootstrap4.1.3/js/bootstrap.min.js' %}"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            (requestClima = () =>{
+                resp = {
+                    "id":1851632,
+                    "name":"Tabossi",
+                    "coord":{"lon":138.933334,"lat":34.966671},
+                    "country":"AR",
+                    "cod":"200",
+                    "message":0.0045,
+                    "cnt":38,
+                    "dt":1406106000,
+                    "main":{
+                        "temp":27.77,
+                        "temp_min":298.77,
+                        "temp_max":298.774,
+                        "pressure":1005.93,
+                        "sea_level":1018.18,
+                        "grnd_level":1005.93,
+                        "humidity":87,
+                        "temp_kf":0.26
+                    },
+                    "weather":[{"id":804,"main":"Clouds","description":"Nublado","icon":"04d"}],
+                    "clouds":{"all":88},
+                    "wind":{"speed":5.71,"deg":229.501},
+                    "sys":{"pod":"d"},
+                    "dt_txt":"2014-07-23 09:00:00"
+                }
+
+                $('#clima').append(`
+                    <div class="box">
+                        <article class="media">
+                            <div class="media-left">
+                                <figure class="image is-50x50">
+                                    <img src="http://openweathermap.org/img/w/${ resp.weather[0].icon }.png" alt="Image">
+                                </figure>
+                            </div>
+                            <div class="media-content">
+                                <div class="content">
+                                    <p>
+                                        <span class="">${ resp.name } - ${resp.country} - ${ resp.weather[0].description }</span>
+                                        <br>
+                                        <span class="">Temperatura: ${ resp.main.temp }° C</span>
+                                        
+                                    </p>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                `)
+
+                // const url = 'http://api.openweathermap.org/data/2.5/weather?q=tabossi&units=metric&lang=es&appid=dd60db7a0b85fc39d635d60f4453965a'
+                // $.ajax({
+                //     type: "GET",
+                //     url: url,
+                //     dataType: "json"
+                // }).done(function (resp) {
+                //     console.log(resp)
+                //     $('#clima').append(`
+                //         <div class="box">
+                //             <article class="media">
+                //                 <div class="media-left">
+                //                     <figure class="image is-50x50">
+                //                         <img src="http://openweathermap.org/img/w/${ resp.weather[0].icon }.png" alt="Image">
+                //                     </figure>
+                //                 </div>
+                //                 <div class="media-content">
+                //                     <div class="content">
+                //                         <p>
+                //                             <span class="title">${ resp.name } - ${resp.sys.country} - ${ resp.weather[0].description }</span>
+                //                             <br>
+                //                             <span class="subtitle">Temperatura: ${ resp.main.temp }° C</span>
+                                            
+                //                         </p>
+                //                     </div>
+                //                 </div>
+                //             </article>
+                //         </div>
+                //     `)
+                // })
+            })()
+            $("#sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
+            function matchDisplay(widthDisplay){
+                if (widthDisplay.matches) {
+                    $('#sidebar, #content').removeClass('active');
+                    $('#sidebar-container').removeClass('show-container-sidebar');
+                }else {
+                    $('.overlay').removeClass('active');
+                    $('#sidebar, #content').removeClass('active');
+                    $('#sidebar-container').removeClass('show-container-sidebar');
+                }
+
+            }
+          
+            var widthDisplay = window.matchMedia("(max-width: 768px)")
+            // matchDisplay(widthDisplay)
+            widthDisplay.addListener(matchDisplay)
+
+            $('#sidebarCollapse, #dismiss, .overlay').on('click', function () {
+                if (widthDisplay.matches) {
+                    $('#dismiss').html('')
+                    $('#dismiss').append(`<i class="fas fa-arrow-left"></i>`)
+                    $('.overlay').toggleClass('active');
+                    $('#sidebar').toggleClass('active');
+                    $('#sidebar-container').toggleClass('show-container-sidebar');
+                }else{
+                    $('#sidebar, #content').toggleClass('active');
+                    $('#sidebar-container').toggleClass('show-container-sidebar');
+                    $('.collapse.in').toggleClass('in');
+                    $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+                }
+            })
+        });
+	</script>
+	{% block scripts %}
+	{% endblock scripts %}
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+@font-face {
+    font-family: "Vanish";
+    src: url("../fonts/VANISH.TTF");
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /* background: #000; */
+}
+
+.marca-title {
+    position: relative;    
+    text-transform: uppercase;
+    font-size: 2em;
+    letter-spacing: 4px;
+    overflow: hidden;
+    font-family: 'Vanish';
+    margin: -18px;
+    background: linear-gradient(90deg, #000, #268eab, #000);
+    background-repeat: no-repeat;
+    animation: animate 7s linear infinite;
+    background-size: 80%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.marca-subtitle {
+    position: relative;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    font-size: 1em;
+    letter-spacing: 4px;
+    overflow: hidden;
+    margin: 0;
+    background: linear-gradient(90deg, #000, #268eab, #000);
+    background-repeat: no-repeat;
+    animation: animate 7s linear infinite;
+    background-size: 80%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.marca {
+    text-align: center;
+}
+
+@keyframes animate
+{
+    0% {
+        background-position: -500%;
+    }
+    100% {
+        background-position: 500%;
+    }
+}

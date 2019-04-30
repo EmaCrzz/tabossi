@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+{{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/post_detail.css' %}">
+{% endblock css%}
+
+{% block content %}
+	<div class="col-md-12 grid-margin stretch-card">
+		<div class="card">
+			<div class="card-body">
+				<h4 class="card-title">{{ post.title }}</h4>
+				{% if post.published_date %}
+					<p class="card-description ">
+							{{ post.published_date }}
+					</p>
+				{% endif %}
+				<div class="">
+					<p>{{ post.text|linebreaksbr }}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-md-12 grid-margin stretch-card">
+		<div class="card">
+			<div class="row">
+				{% if post.imagens.all %}
+				<div class="col-md-6">
+					<div class="card-body">
+						<h4 class="card-title">Imagenes de la noticia</h4>
+						<div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+							<div class="carousel-inner">
+								{% for imagen in post.imagens.all %}
+									<div class="carousel-item {% if forloop.first %} active {% endif %} ">
+										<img src="{{imagen.image.url}}" class="d-block w-100" alt="...">
+									</div>
+								{% endfor %}
+							</div>
+							<a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+								<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+								<span class="sr-only">Anterior</span>
+							</a>
+							<a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+								<span class="carousel-control-next-icon" aria-hidden="true"></span>
+								<span class="sr-only">Sigiente</span>
+							</a>
+						</div>				
+					</div>
+				</div>
+				{% endif %}
+				<div class="{% if post.imagens.all %}col-md-6{% else %} col-md-12{%endif%} ">
+					<div class="card-body">
+						<h4 class="card-title">Comentarios</h4>
+						<div class="commentbox">
+							<div class="commentlogs" id="comentarios">
+								
+							</div>
+							<div class="comment-form">
+								<form class="forms-sample"
+									id='coment'
+									data-url="{{post.get_add_comment_url}}"
+									data-comments="{{post.get_list_comment_url}}"
+								>
+									{% csrf_token %}
+									<input type="hidden" name="post_id" id="id_post_id" value="{{post.pk}}">
+									<div class="form-group">
+										<label for="name">Nombre</label>
+										<input type="text" 
+											class="form-control" 
+											id="name" 
+											name="{{form.name.html_name}}"
+											placeholder="Nombre"
+										>
+									</div>
+									<div class="form-group">
+										<label for="comentario">Comentario</label>
+										<textarea
+											id="comentario"
+											class="form-control"
+											cols="29"
+											rows="3"
+											name="text"
+											placeholder="Comentario"
+										></textarea>
+									</div>
+									<button type="submit" id="enviar" class="btn btn-success mr-2">Enviar</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block scripts %}
+<script>    
+
+$(document).ready(function() {
+	(cargar_comentarios = () => {
+		$.ajax({
+			type: "GET",
+			url: $('#coment').data('comments'),
+			dataType: "json"
+		}).done(function (resp) {
+			respuesta = JSON.parse(resp)
+			if(respuesta.length){
+				respuesta.map(({fields})=>{
+					$('#comentarios').append(`
+						<div class="comment">
+							<div class="user-photo"><img src="../../media/images/default-user.png"></div>
+							<p class="comment-message">${fields.name}: 
+							${fields.text}</p>
+						</div>
+					`)
+				})
+				$("#comentarios").scrollTop($("#comentarios")[0].scrollHeight)
+			}else{
+				$('#comentarios').append(`
+					<p class="comment-message">Ésta publicación aún no tiene comentarios. Sé el primero!</p>
+				`)
+			}
+		  	
+		})
+	})()
+	$('#enviar').click((event)=>{
+			event.preventDefault()
+			const data = $('#coment').serialize()
+			$.ajax({
+				type: "POST",
+				url: $('#coment').data('url'),
+				dataType: "json",
+				data: data
+			}).done(function (respuesta) {
+				if(respuesta.status == 'success'){
+					limpiar_comment()
+					cargar_comentarios()
+				}
+			})
+			
+	})
+	function limpiar_comment(){
+		$('#comentarios').html('')
+		$('#name').val('')
+		$('#comentario').val('')
+	}
+})
+
+</script> 
+{% endblock scripts %}

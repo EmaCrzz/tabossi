@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+{{ block.super }}
+  
+{% endblock css%}
+
+{% block content %}
+
+<div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Ordenanzas</h4>
+            <div id="accordion"></div>
+        </div>
+    </div>
+</div>
+<div id="modal" class="modal" tabindex="-1" role="dialog"></div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+	(cargar_comentarios = () => {
+        $.ajax({
+			type: "GET",
+			url: '/ordenanzas/',
+			dataType: "json"
+		}).done(function (resp) {
+            console.log(resp.data)
+            for(d in resp.data ){
+                $('#accordion').append(`
+                    <div class="card">
+                        <div class="card-header" id="heading${d}">
+                            <h5 class="mb-0" style="text-align: center;">
+                                <button class="btn btn-link"
+                                    data-toggle="collapse"
+                                    data-target="#collapse${d}"
+                                    aria-expanded="true"
+                                    aria-controls="collapse${d}"
+                                >
+                                    Ordenanzas ${d}
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapse${d}"
+                            class="collapse"
+                            aria-labelledby="heading${d}"
+                            data-parent="#accordion"
+                        ></div>
+                    </div>                
+                `)
+                for(ord in resp.data[d]){
+                    $(`#collapse${d}`).append(`
+                        <div class="card">
+                            <button class="btn btn-link"
+                                data-toggle="collapse"
+                                data-description=${resp.data[d][ord].description}
+                                data-document=${resp.data[d][ord].document}
+                                data-published_date=${resp.data[d][ord].published_date}
+                                aria-expanded="true"
+                                aria-controls="collapse${d}"
+                                onClick="mostrarModal(this)"
+                            >
+                                ${resp.data[d][ord].description}
+                            </button>
+                        </div>
+                    `)
+                }
+                
+            }
+        })
+    })()
+})
+
+mostrarModal = (element) => {
+    $('#modal').append(`
+        <div class="modal-dialog  modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">${$(element).data('description')}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="portapdf"> 
+                        <object data="${$(element).data('document')}"
+                            type="application/pdf"
+                            width="100%"
+                            height="470"
+                        ></object> 
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal"
+                    >
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    `)
+    $('#modal').modal('show')
+}
+$('#modal').on('hidden.bs.modal', function (e) {
+    $('#modal').html('')
+})
+</script>
+{% endblock scripts %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    
+    {% if not posts %}
+        <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body" style="height: 280px;">
+                    <p>No hay resultados</p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+        
+    {% for post in posts %}
+        <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <p>publicado: {{ post.published_date }}</p>
+                    <h1><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h1>
+                    <p>{{ post.text|linebreaksbr|truncatewords:22 }}</p>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
