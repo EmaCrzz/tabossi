@@ -273,57 +273,57 @@
                     "dt_txt":"2014-07-23 09:00:00"
                 }
 
-                $('#clima').append(`
-                    <div class="box">
-                        <article class="media">
-                            <div class="media-left">
-                                <figure class="image is-50x50">
-                                    <img src="http://openweathermap.org/img/w/${ resp.weather[0].icon }.png" alt="Image">
-                                </figure>
-                            </div>
-                            <div class="media-content">
-                                <div class="content">
-                                    <p>
-                                        <span class="">${ resp.name } - ${resp.country} - ${ resp.weather[0].description }</span>
-                                        <br>
-                                        <span class="">Temperatura: ${ resp.main.temp }° C</span>
+                // $('#clima').append(`
+                //     <div class="box">
+                //         <article class="media">
+                //             <div class="media-left">
+                //                 <figure class="image is-50x50">
+                //                     <img src="http://openweathermap.org/img/w/${ resp.weather[0].icon }.png" alt="Image">
+                //                 </figure>
+                //             </div>
+                //             <div class="media-content">
+                //                 <div class="content">
+                //                     <p>
+                //                         <span class="">${ resp.name } - ${resp.country} - ${ resp.weather[0].description }</span>
+                //                         <br>
+                //                         <span class="">Temperatura: ${ resp.main.temp }° C</span>
                                         
-                                    </p>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
-                `)
+                //                     </p>
+                //                 </div>
+                //             </div>
+                //         </article>
+                //     </div>
+                // `) Para establecer el tiempo de forma estatica
 
-                // const url = 'http://api.openweathermap.org/data/2.5/weather?q=tabossi&units=metric&lang=es&appid=dd60db7a0b85fc39d635d60f4453965a'
-                // $.ajax({
-                //     type: "GET",
-                //     url: url,
-                //     dataType: "json"
-                // }).done(function (resp) {
-                //     console.log(resp)
-                //     $('#clima').append(`
-                //         <div class="box">
-                //             <article class="media">
-                //                 <div class="media-left">
-                //                     <figure class="image is-50x50">
-                //                         <img src="http://openweathermap.org/img/w/${ resp.weather[0].icon }.png" alt="Image">
-                //                     </figure>
-                //                 </div>
-                //                 <div class="media-content">
-                //                     <div class="content">
-                //                         <p>
-                //                             <span class="title">${ resp.name } - ${resp.sys.country} - ${ resp.weather[0].description }</span>
-                //                             <br>
-                //                             <span class="subtitle">Temperatura: ${ resp.main.temp }° C</span>
+                const url = 'http://api.openweathermap.org/data/2.5/weather?q=tabossi&units=metric&lang=es&appid=dd60db7a0b85fc39d635d60f4453965a'
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    dataType: "json"
+                }).done(function (resp) {
+                    console.log(resp)
+                    $('#clima').append(`
+                        <div class="box">
+                            <article class="media">
+                                <div class="media-left">
+                                    <figure class="image is-50x50">
+                                        <img src="http://openweathermap.org/img/w/${ resp.weather[0].icon }.png" alt="Image">
+                                    </figure>
+                                </div>
+                                <div class="media-content">
+                                    <div class="content">
+                                        <p>
+                                            <span class="title">${ resp.name } - ${resp.sys.country} - ${ resp.weather[0].description }</span>
+                                            <br>
+                                            <span class="subtitle">Temperatura: ${ resp.main.temp }° C</span>
                                             
-                //                         </p>
-                //                     </div>
-                //                 </div>
-                //             </article>
-                //         </div>
-                //     `)
-                // })
+                                        </p>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    `)
+                })
             })()
             $("#sidebar").mCustomScrollbar({
                 theme: "minimal"
