@@ -91,7 +91,18 @@ mostrarModal = (element) => {
                             type="application/pdf"
                             width="100%"
                             height="470"
-                        ></object> 
+                        >
+                        <p>Su navegador web no tiene un complemento de PDF. En su lugar puedes:
+                        </p>
+                            <a href="${$(element).data('document')}" download>
+                                <button type="button"
+                                    class="btn btn-secondary"
+                                    data-dismiss="modal"
+                                >
+                                    Haga clic aquí para descargar el archivo PDF.
+                                </button>
+                            </a>
+                        </object> 
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -99,7 +110,7 @@ mostrarModal = (element) => {
                         class="btn btn-secondary"
                         data-dismiss="modal"
                     >
-                        Close
+                        Cerrar
                     </button>
                 </div>
             </div>
