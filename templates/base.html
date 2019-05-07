@@ -177,7 +177,7 @@
                                     {% if p.pk != posts.first.pk %}
                                         {% if p.imagens.all  %}
                                             <div class="col-md-9">
-                                                <h4>{{ p.title }}</h4>
+                                                <h4><a href="{% url 'post_detail' pk=p.pk %}">{{ p.title }}</a></h4>
                                                 {% if p.published_date %}
                                                     <p class="card-description ">
                                                         {{ p.published_date }}
@@ -192,7 +192,7 @@
                                             </div>    
                                         {% else %}
                                             <div class="col-md-12">
-                                                <h4>{{ p.title }}</h4>
+                                                <h4><a href="{% url 'post_detail' pk=p.pk %}">{{ p.title }}</a></h4>
                                                 {% if p.published_date %}
                                                     <p class="card-description ">
                                                         {{ p.published_date }}
