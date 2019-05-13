@@ -34,7 +34,7 @@ def section_list(request):
 
 def posts_sections(request, pk):
     sections = Section.objects.filter(disable=False)
-    posts = Post.objects.filter(section=pk).order_by('published_date')
+    posts = Post.objects.filter(section=pk).order_by('-published_date')
     return render(request, 'posts/post_list.html', {'posts': posts, 'sections': sections})
 
 
